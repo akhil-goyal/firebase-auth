@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account</title>
+</head>
+
+<body>
+  <h1>My Account</h1>
+
+  <div id="auth">
+    <ul>
+      <a href="index.html">Home</a>
+      <a href="account.html">My Account</a>
+      <a href="logout.html">Logout</a>
+    </ul>
+  </div>
+
+  First Name:
+  <input type="text" id="firstname" />
+  <br /><br />
+  Last Name:
+  <input type="text" id="lastname" />
+  <br /><br />
+  <input type="submit" id="update" value="Update" />
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "XXXXXXXXXXXX",
+      authDomain: "XXXXXXXXXXXX",
+      projectId: "XXXXXXXXXXXX",
+      storageBucket: "XXXXXXXXXXXX",
+      messagingSenderId: "XXXXXXXXXXXX",
+      appId: "XXXXXXXXXXXX"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const db = firebase.firestore();
+      const firstname = document.getElementById("firstname");
+      const lastname = document.getElementById("lastname");
+      const update = document.getElementById("update");
+      let userRef = null;
+
+      function getUser(uid) {
+        db.collection("Users")
+          .doc(uid)
+          .get()
+          .then(function (doc) {
+            if (doc.exists) {
+              firstname.value = doc.data().firstname;
+              lastname.value = doc.data().lastname;
+            } else {
+              console.log("No such document");
+            }
+          });
+      }
+
+      function updateUser(uid, first, last) {
+        db.collection("Users").doc(uid).update({
+          firstname: first,
+          lastname: last,
+        });
+      }
+
+      update.addEventListener("click", function () {
+        console.log("update");
+        updateUser(userRef.uid, firstname.value, lastname.value);
+      });
+
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          console.log("user", user);
+          userRef = user;
+          getUser(user.uid);
+        } else {
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

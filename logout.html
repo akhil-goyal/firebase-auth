@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logout</title>
+</head>
+
+<body>
+  <h1>Application Logout</h1>
+  <div id="no-auth">
+    <ul>
+      <a href="index.html">Home</a>
+      <a href="register.html">Register</a>
+      <a href="login.html">Login</a>
+    </ul>
+  </div>
+
+  <div id="auth">
+    <ul>
+      <a href="index.html">Home</a>
+      <a href="account.html">My Account</a>
+      <a href="logout.html">Logout</a>
+    </ul>
+  </div>
+  <h2>You have been logged out!</h2>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "XXXXXXXXXXXX",
+      authDomain: "XXXXXXXXXXXX",
+      projectId: "XXXXXXXXXXXX",
+      storageBucket: "XXXXXXXXXXXX",
+      messagingSenderId: "XXXXXXXXXXXX",
+      appId: "XXXXXXXXXXXX"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const noAuth = document.getElementById("no-auth");
+      const auth = document.getElementById("auth");
+
+      firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          console.log("user", user);
+          firebase.auth().signOut();
+          auth.style.display = "block";
+          noAuth.style.display = "none";
+        } else {
+          auth.style.display = "none";
+          noAuth.style.display = "block";
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
